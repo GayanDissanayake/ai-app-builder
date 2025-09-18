@@ -1,14 +1,27 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+
+// Firebase setup
+const {
+  initializeApp,
+  applicationDefault,
+  cert,
+} = require("firebase-admin/app");
+const { getFirestore } = require("firebase-admin/firestore");
+
+// You need to download your service account key from Firebase Console and save as serviceAccountKey.json
+const serviceAccount = require("./serviceAccountKey.json");
+
+initializeApp({
+  credential: cert(serviceAccount),
+});
+
+const db = getFirestore();
+
 app.use(cors());
 app.use(express.json());
 const PORT = process.env.PORT || 5050;
-
-// const mongoose = require('mongoose');
-// mongoose.connect('your_connection_string')
-//   .then(() => console.log('MongoDB connected'))
-//   .catch(err => console.error(err));
 
 app.get("/", (req, res) => res.send("API Running"));
 

@@ -11,3 +11,6 @@ build/
 .idea/
 # Ignore OS generated files
 Thumbs.db
+
+# Firebase credentials
+server/serviceAccountKey.json
