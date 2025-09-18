@@ -17,7 +17,9 @@ try {
       "FIREBASE_SERVICE_ACCOUNT environment variable is not set."
     );
   }
-  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  serviceAccount = JSON.parse(
+    Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, "base64").toString("utf8")
+  );
 } catch (err) {
   console.error("Error parsing FIREBASE_SERVICE_ACCOUNT:", err.message);
   process.exit(1);
