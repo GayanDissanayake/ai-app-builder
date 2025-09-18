@@ -17,6 +17,7 @@ try {
       "FIREBASE_SERVICE_ACCOUNT environment variable is not set."
     );
   }
+  // Decode base64 string to JSON
   serviceAccount = JSON.parse(
     Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, "base64").toString("utf8")
   );
