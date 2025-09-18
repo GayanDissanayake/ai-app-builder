@@ -10,11 +10,18 @@ const {
 } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 
-// You need to download your service account key from Firebase Console and save as serviceAccountKey.json
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-initializeApp({
-  credential: cert(serviceAccount),
-});
+let serviceAccount;
+try {
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
+    throw new Error(
+      "FIREBASE_SERVICE_ACCOUNT environment variable is not set."
+    );
+  }
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+} catch (err) {
+  console.error("Error parsing FIREBASE_SERVICE_ACCOUNT:", err.message);
+  process.exit(1);
+}
 
 initializeApp({
   credential: cert(serviceAccount),
