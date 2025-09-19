@@ -1,12 +1,12 @@
 import "./App.css";
 import RequirementInputForm from "./RequirementInputForm";
 
-function App() {
+const App: React.FC = () => {
   return (
     <div className="App">
       <RequirementInputForm />
     </div>
   );
-}
+};
 
 export default App;
