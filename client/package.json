@@ -15,7 +15,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --config jest.config.js",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -43,6 +43,7 @@
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@types/supertest": "^6.0.3",
-    "ts-jest": "^29.4.3"
+    "ts-jest": "^29.4.3",
+    "typescript": "^5.9.2"
   }
 }
