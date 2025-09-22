@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   Box,
   Button,
@@ -28,10 +29,26 @@ const darkTheme = createTheme({
 const RequirementInputForm = () => {
   const [input, setInput] = useState("");
   const [requirements, setRequirements] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setRequirements(input);
+    setLoading(true);
+    setError("");
+    try {
+      const res = await axios.post(
+        "http://localhost:5050/api/extract-requirements",
+        { requirements: input }
+      );
+      setRequirements(res.data.extracted);
+    } catch (err: any) {
+      setError(
+        err?.response?.data?.message || "Failed to extract requirements."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -67,10 +84,16 @@ const RequirementInputForm = () => {
               variant="contained"
               color="primary"
               sx={{ mt: 2 }}
+              disabled={loading}
             >
-              Submit
+              {loading ? "Extracting..." : "Submit"}
             </Button>
           </Box>
+          {error && (
+            <Typography color="error" sx={{ mt: 2 }}>
+              {error}
+            </Typography>
+          )}
           {requirements && (
             <Paper
               sx={{

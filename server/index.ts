@@ -32,6 +32,13 @@ app.use(cors());
 app.use(express.json());
 const PORT = process.env.PORT || 5050;
 
+app.post("/api/extract-requirements", (req, res) => {
+  const { requirements } = req.body;
+  // Mock AI extraction: just echo back with a prefix
+  const extracted = `Extracted: ${requirements}`;
+  res.json({ extracted });
+});
+
 app.get("/", (_req, res) => res.send("API Running"));
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
