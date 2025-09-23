@@ -9,6 +9,7 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material";
+import DynamicAppUI from "./DynamicAppUI";
 
 const darkTheme = createTheme({
   palette: {
@@ -29,6 +30,7 @@ const darkTheme = createTheme({
 const RequirementInputForm = () => {
   const [input, setInput] = useState("");
   const [requirements, setRequirements] = useState("");
+  const [parsed, setParsed] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -42,6 +44,36 @@ const RequirementInputForm = () => {
         { requirements: input }
       );
       setRequirements(res.data.extracted);
+      // Parse requirements (mock parser for demo)
+      const lines = res.data.extracted.split("\n");
+      let appName = "";
+      let entities: any[] = [];
+      let roles: string[] = [];
+      let features: string[] = [];
+      lines.forEach((line: string) => {
+        if (line.toLowerCase().includes("app name:")) {
+          appName = line.split(":")[1]?.trim();
+        } else if (line.toLowerCase().includes("entities:")) {
+          entities = line
+            .split(":")[1]
+            ?.split(",")
+            .map((e: string) => ({
+              name: e.trim(),
+              fields: mockFields(e.trim()),
+            }));
+        } else if (line.toLowerCase().includes("roles:")) {
+          roles = line
+            .split(":")[1]
+            ?.split(",")
+            .map((r: string) => r.trim());
+        } else if (line.toLowerCase().includes("features:")) {
+          features = line
+            .split(":")[1]
+            ?.split(",")
+            .map((f: string) => f.trim());
+        }
+      });
+      setParsed({ appName, entities, roles, features });
     } catch (err: any) {
       setError(
         err?.response?.data?.message || "Failed to extract requirements."
@@ -50,6 +82,20 @@ const RequirementInputForm = () => {
       setLoading(false);
     }
   };
+
+  // Mock fields for demo
+  function mockFields(entity: string) {
+    switch (entity.toLowerCase()) {
+      case "student":
+        return ["Name", "Email", "Age"];
+      case "course":
+        return ["Title", "Code", "Credits"];
+      case "grade":
+        return ["Student", "Course", "Grade"];
+      default:
+        return ["Field1", "Field2", "Field3"];
+    }
+  }
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -113,6 +159,14 @@ const RequirementInputForm = () => {
                 {requirements}
               </Typography>
             </Paper>
+          )}
+          {parsed && (
+            <DynamicAppUI
+              appName={parsed.appName}
+              entities={parsed.entities}
+              roles={parsed.roles}
+              features={parsed.features}
+            />
           )}
         </Paper>
       </Box>
