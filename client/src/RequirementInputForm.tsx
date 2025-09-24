@@ -39,10 +39,11 @@ const RequirementInputForm = () => {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.post(
-        "http://localhost:5050/api/extract-requirements",
-        { requirements: input }
-      );
+      const apiUrl =
+        process.env.NODE_ENV === "production"
+          ? "https://ai-app-builder-production-87d7.up.railway.app/api/extract-requirements"
+          : "http://localhost:5050/api/extract-requirements";
+      const res = await axios.post(apiUrl, { requirements: input });
       setRequirements(res.data.extracted);
       // Parse requirements (mock parser for demo)
       const lines = res.data.extracted.split("\n");
